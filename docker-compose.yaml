@@ -29,12 +29,6 @@ services:
       - .:/app:delegated
     ports:
       - "8080:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/docs"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-
 
 volumes:
   postgres_data:
