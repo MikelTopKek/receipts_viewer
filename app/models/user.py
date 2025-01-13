@@ -1,13 +1,14 @@
-from datetime import datetime, timezone
-from typing import Optional
-from sqlalchemy import String, DateTime, Boolean, Column
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, Column, DateTime, String
+
 from app.models.base import BaseModel
 
 
 class User(BaseModel):
     """Model with information about users"""
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     email = Column(String(255), unique=True, index=True, nullable=False)
     password = Column(String(255), nullable=False)
@@ -15,9 +16,9 @@ class User(BaseModel):
     last_name = Column(String(50), nullable=True)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     updated_at = Column(
-        DateTime, 
-        default=lambda: datetime.now(timezone.utc), 
-        onupdate=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+        onupdate=lambda: datetime.now(UTC),
     )

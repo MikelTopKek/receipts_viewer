@@ -1,6 +1,6 @@
+from sqlalchemy import Column, Integer, MetaData, func
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import MetaData, Column, Integer, func
 
 metadata = MetaData()
 

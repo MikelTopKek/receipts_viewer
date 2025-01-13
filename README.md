@@ -7,6 +7,7 @@ used Clean architecture with DDD elements
 
 - Python 3.11
 - pip
+- poetry
 
 ## Installation
 
@@ -24,10 +25,11 @@ pip install poetry
 ```
 poetry install --all-extras
 ```
-### 4. Generate .env file based on .env_example:
+### 4. Generate .env file based on .env_example (variable ENV change to "LOCAL"):
 ```
 cat .env
 ```
+
 
 ## Run all containers:
 With pre-installed make:
@@ -45,4 +47,3 @@ http://localhost:8080/docs
 
 ## Docs:
 http://localhost:8080/redoc
-
