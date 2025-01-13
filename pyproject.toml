@@ -1,21 +1,28 @@
 [tool.poetry]
-name = "receipts-viewer"
+name = "receipts_viewer"
 version = "1"
 description = ""
 authors = ["mykhailo.maliukov"]
-readme = "README.md"
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "^0.115.6"
 uvicorn = "^0.34.0"
-pydantic = "^2.10.5"
+pydantic = {extras = ["email"], version = "^2.10.5"}
 pydantic-settings = "^2.7.1"
 sqlalchemy = "^2.0.37"
 pytest = "^8.3.4"
 pytest-asyncio = "^0.25.2"
-psycopg2 = "^2.9.10"
+psycopg2 = "^2.9.9"
+asyncpg = "^0.29.0"
 alembic = "^1.14.0"
+passlib = "^1.7.4"
+bcrypt = "4.0.1"
+factory-boy = "^3.3.0"
+python-jose = "^3.3.0"
+python-multipart = "^0.0.20"
+ruff = "^0.9.1"
 
 
 [build-system]

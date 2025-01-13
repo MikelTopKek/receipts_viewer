@@ -1,0 +1,160 @@
+target-version = "py311"
+
+extend-exclude = [
+    ".cache",
+    ".pytest_cache",
+    "data",
+    "docs",
+    "resources",
+    "pdoc",
+    ".venv",
+    "__pypackages__",
+    "venv",
+    "ui",
+    "migrations",
+    "alembic",
+]
+ignore = [
+    # Copyright.
+    "CPY001",
+    # Public mode docstrings.
+    "D100",
+    "D104",
+    # Use of assert detected
+    "S101",
+    # [*] Import block is un-sorted or un-formatted
+    "I001",
+    "UP010",
+    # Redundant exception object included in `logging.exception` call.
+    "TRY401",
+    # Doc init.
+    "D107",
+    "D205",
+    "D212",
+    "D400",
+    "D202",
+    "D415",
+    "TRY400",
+    "D204",
+    "TD003",
+    "TD002",
+    "B008",
+    "TD004",
+    "PGH003",
+    "TRY003",
+    "B904",
+    "ISC001",
+    "PLC2801",
+    "DTZ005",
+    "S405",
+    "S314",
+    "D301",
+    "D404",
+    "D401",
+    "PLC0415",
+    "D407",
+    "D413",
+    "RUF001",
+    "PTH110",
+    "DTZ003",
+    "S105",
+    "N818",
+]
+line-length = 120
+select = [
+    # Pyflakes
+    "F",
+    # pycodestyle (E, W)
+    "E",
+    "W",
+    # mccabe
+    "C90",
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+    # pyupgrade
+    "UP",
+    # flake8-async
+    "ASYNC",
+    # flake8-bandit
+    "S",
+    # flake8-boolean-trap
+    "FBT",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-commas
+    "COM",
+    # flake8-copyright
+    "CPY",
+    # flake8-comprehensions
+    "C4",
+    # flake8-datetimez
+    "DTZ",
+    # flake8-executable
+    "EXE",
+    # flake8-future-annotations
+    "FA",
+    # flake8-implicit-str-concat
+    "ISC",
+    # flake8-pie
+    "PIE",
+    # flake8-pytest-style
+    "PT",
+    # flake8-raise
+    "RSE",
+    # flake8-return
+    "RET",
+    # flake8-slots
+    "SLOT",
+    # flake8-simplify
+    "SIM",
+    # flake8-unused-arguments
+    "ARG",
+    # flake8-use-pathlib
+    "PTH",
+    # flake8-todos
+    "TD",
+    # pandas-vet
+    "PD",
+    # pygrep-hooks
+    "PGH",
+    # Pylint
+    "PL",
+    # tryceratops
+    "TRY",
+    # flynt
+    "FLY",
+    # NumPy-specific rules
+    "NPY",
+    # Perflint
+    "PERF",
+    # refurb
+    "FURB",
+    # flake8-logging
+    "LOG",
+    # Ruff-specific rules
+    "RUF",
+    # flake8-quotes
+    "Q",
+    # flake8-debugger
+    "T10",
+]
+
+[mccabe]
+max-complexity = 10
+
+[pylint]
+max-args = 10
+max-public-methods = 30
+
+
+[per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/__init__.py" = ["F401"]
+"tests/**" = ["ARG001", "ARG004", "PLR6301", "FBT001"]
+"**/testing/**" = ["ARG001", "ARG004"]

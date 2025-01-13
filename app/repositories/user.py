@@ -1,0 +1,47 @@
+from sqlalchemy import select
+
+from app.db.base import Database
+from app.models.user import User
+from app.repositories.base import BaseRepository
+
+
+class UserRepository(BaseRepository):
+    """User repository for interacting with db"""
+
+    def __init__(self, db: Database):
+        self.db = db
+
+    async def create(self, email: str, password: str, **kwargs) -> User:
+        """Creating user in db"""
+        return await self.db.get_or_create(
+            table=User,
+            keys={"email": email},
+            defaults={"password": password, **kwargs},
+        )
+
+    async def get_by_email(self, email: str) -> User | None:
+        """Get user by email"""
+        async with self.db._async_session_scope("user", "get_by_email") as session:
+            query = select(User).where(User.email == email)
+            result = await session.execute(query)
+            return result.scalar_one_or_none()
+
+    async def get_by_id(self, user_id: int) -> User | None:
+        """Get user by user_id"""
+        return await self.db.get(User, User.id == user_id)
+
+    async def update_password(self, user_id: int, new_password: str) -> User | None:
+        """Update user`s password"""
+        async with self.db._async_session_scope("user", "update_password") as session:
+            user = await self.get_by_id(user_id)
+            if user:
+                user.password = new_password
+                await session.flush()
+                await session.refresh(user)
+            return user
+
+    async def update(self, user_id: int, data: dict) -> User | None:
+        """Update user`s data"""
+        return await self.db.update(table=User,
+                                    obj_id=user_id,
+                                    values=data)
