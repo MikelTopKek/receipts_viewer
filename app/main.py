@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1 import auth
+from app.api.v1 import auth, receipts
 from app.conf.settings import Settings, settings
 from app.core.exceptions import (AppErrorException, app_error_handler,
                                  http_error_handler, validation_error_handler,
@@ -24,6 +24,7 @@ def init_middlewares(app_api: FastAPI) -> None:
 def init_routes(app_api: FastAPI) -> None:
     """Initialize all service routes."""
     app_api.include_router(auth.router, prefix="/api/v1/users")
+    app_api.include_router(receipts.router, prefix="/api/v1/receipts")
 
 
 def init_exception_handlers(app_api: FastAPI) -> None:

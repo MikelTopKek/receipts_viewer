@@ -29,8 +29,6 @@ def upgrade() -> None:
     sa.Column("last_name", sa.String(length=50), nullable=True),
     sa.Column("is_active", sa.Boolean(), nullable=True),
     sa.Column("is_superuser", sa.Boolean(), nullable=True),
-    sa.Column("created_at", sa.DateTime(), nullable=True),
-    sa.Column("updated_at", sa.DateTime(), nullable=True),
     sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
     sa.Column("created", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), nullable=False),
     sa.Column("updated", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), nullable=False),

@@ -107,6 +107,15 @@ class Database(metaclass=Singleton):
 
             return None
 
+    async def create(self, obj: Model) -> Model:
+        """Creating record in db"""
+
+        async with self._async_session_scope(obj.__tablename__, "async_create") as session:
+            session.add(obj)
+            await session.commit()
+            await session.refresh(obj)
+        return obj
+
     async def get_or_create(
         self,
         table: type[Model],
@@ -135,3 +144,22 @@ class Database(metaclass=Singleton):
             query = select(table).where(*keys)
             result = await session.execute(query)
         return result.scalar()
+
+    async def get_all(
+        self,
+        table: Model,
+        *keys: BinaryExpression,
+        orders=None,
+        limits: int | None = None,
+    ) -> Optional["Model"]:
+        """Get all objects from db using expressions"""
+
+        async with self._async_session_scope(table.__tablename__, "async_get_all") as session:
+            query = select(table).where(*keys)
+            if orders is not None:
+                query = query.order_by(orders)
+            if limits is not None:
+                query = query.limit(limits)
+
+            result = await session.execute(query)
+        return result.scalars().all()

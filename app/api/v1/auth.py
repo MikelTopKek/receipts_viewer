@@ -7,7 +7,7 @@ from app.interactors.user import UserCreateDTO, UserInteractor, UserUpdateDTO
 from app.repositories.user import UserRepository
 
 
-router = APIRouter()
+router = APIRouter(tags=["users"])
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=dict)
@@ -50,7 +50,7 @@ async def get_current_user(
     current_user_id: int = Depends(get_current_user_id),
     repo: UserRepository = Depends(get_user_repo),
 ):
-    """Get info about authenticated user"""
+    """Get info about authenticated user. User need to be authorized"""
     user = await repo.get_by_id(current_user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -63,5 +63,5 @@ async def update_me(
     current_user_id: int = Depends(get_current_user_id),
     interactor: UserInteractor = Depends(get_user_interactor),
 ):
-    """Update authenticated user`s info"""
+    """Update authenticated user`s info. User need to be authorized"""
     return await interactor.update_user(current_user_id, user_data)

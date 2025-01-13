@@ -1,6 +1,5 @@
-from datetime import UTC, datetime
-
-from sqlalchemy import Boolean, Column, DateTime, String
+from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, String
 
 from app.models.base import BaseModel
 
@@ -16,9 +15,5 @@ class User(BaseModel):
     last_name = Column(String(50), nullable=True)
     is_active = Column(Boolean, default=True)
     is_superuser = Column(Boolean, default=False)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
-    updated_at = Column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(UTC),
-        onupdate=lambda: datetime.now(UTC),
-    )
+
+    receipts = relationship("Receipt", back_populates="user", cascade="all, delete-orphan")
