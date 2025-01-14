@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
 import enum
 from pydantic import BaseModel
@@ -43,3 +43,12 @@ class ReceiptResponse(BaseModel):
     total_amount: Decimal
     rest_amount: Decimal
     created: datetime
+
+
+class ReceiptFilter(BaseModel):
+    """Filters for db request for getting receipts data"""
+    date_from: date | None = None
+    date_to: date | None = None
+    min_amount: Decimal | None = None
+    max_amount: Decimal | None = None
+    payment_type: str | None = None

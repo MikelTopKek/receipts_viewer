@@ -166,3 +166,10 @@ class Database(metaclass=Singleton):
 
             result = await session.execute(query)
         return result.scalars().all()
+
+    async def execute_query(self, table: Model, query) -> Model | None:
+        """Execute custom query"""
+
+        async with self._async_session_scope(table.__tablename__, "execute_query") as s:
+            result = await s.execute(query)
+        return result.scalars().all()
