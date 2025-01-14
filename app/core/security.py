@@ -9,7 +9,7 @@ from app.conf.settings import settings
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/users/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -22,12 +22,12 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict) -> str:
+def create_access_token(data: dict) -> tuple[str, datetime]:
     """Create access token with expiration time set in settings"""
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.JWT_ENCODE_ALGORITHM)
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.JWT_ENCODE_ALGORITHM), expire
 
 
 async def get_current_user_id(token: str = Depends(oauth2_scheme)) -> int:

@@ -1,21 +1,23 @@
 services:
-  db:
+  db_test:
     container_name: db
     image: postgres:latest
     env_file:
-      - .env
+      - .env_test
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
+    command: postgres
     ports:
-      - "5432:5432"
+      - "5431:5432"
     restart: unless-stopped
 
-  backend:
+  backend_test:
     depends_on:
-      - db
+      - db_test
     links:
-      - db
-    container_name: backend
+      - db_test
+    container_name: backend_test
+    image: backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -23,10 +25,12 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      - ENV="TEST"
     volumes:
-      - .:/app:delegated
+      - .:/app
     ports:
-      - "8080:8080"
+      - "8081:8080"
 
 volumes:
-  postgres_data:
+  postgres_data_test:

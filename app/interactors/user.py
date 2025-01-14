@@ -62,7 +62,6 @@ class UserInteractor:
         return {
             "id": user.id,
             "email": user.email,
-            "is_active": user.is_active,
         }
 
 

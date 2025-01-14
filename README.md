@@ -1,12 +1,9 @@
 # receipts_viewer
 The test task is to develop a REST API for creating and viewing checks with user registration and authorization.
 
-used Clean architecture with DDD elements
-
 ## Prerequisites
 
 - Python 3.11
-- pip
 - poetry
 
 ## Installation
