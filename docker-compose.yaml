@@ -16,7 +16,6 @@ services:
     links:
       - db
     container_name: backend
-    image: backend
     build:
       context: .
       dockerfile: Dockerfile

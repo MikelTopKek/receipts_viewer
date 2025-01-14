@@ -1,8 +1,8 @@
 from decimal import Decimal
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 import ujson
 from app.repositories.receipt import ReceiptRepository
-from app.schemas.receipt import ReceiptCreate, ReceiptResponse, ProductResponse
+from app.schemas.receipt import ReceiptCreateDTO, ReceiptResponse, ProductData
 
 
 class ReceiptInteractor:
@@ -11,7 +11,7 @@ class ReceiptInteractor:
     def __init__(self, receipt_repo: ReceiptRepository):
         self.receipt_repo = receipt_repo
 
-    async def create_receipt(self, user_id: int, data: ReceiptCreate) -> ReceiptResponse:
+    async def create_receipt(self, user_id: int, data: ReceiptCreateDTO) -> ReceiptResponse:
         """Creating receipt in db based on data from request"""
 
         products_with_total = []
@@ -33,7 +33,7 @@ class ReceiptInteractor:
         receipt_data = {
             "user_id": user_id,
             "total_amount": total_amount,
-            "payment_type": data.payment.type,
+            "payment_type": data.payment.payment_type,
             "payment_amount": data.payment.amount,
             "rest_amount": rest_amount,
             "products": ujson.loads(ujson.dumps(products_with_total)),
@@ -43,10 +43,11 @@ class ReceiptInteractor:
 
         return ReceiptResponse(
             id=receipt.id,
-            products=[ProductResponse(**p) for p in receipt.products],
-            payment=data.payment,
-            total=receipt.total_amount,
-            rest=receipt.rest_amount,
+            products=[ProductData(**p) for p in receipt.products],
+            payment_type=data.payment.payment_type,
+            payment_amount=data.payment.amount,
+            total_amount=receipt.total_amount,
+            rest_amount=receipt.rest_amount,
             created=receipt.created,
         )
 
@@ -56,7 +57,7 @@ class ReceiptInteractor:
         receipt = await self.receipt_repo.get_by_id(receipt_id=receipt_id)
 
         if not receipt or receipt.user_id != current_user_id:
-            raise HTTPException(status_code=404, detail="Receipt not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Receipt not found")
 
         return ReceiptResponse(id=receipt_id,
                                products=receipt.products,

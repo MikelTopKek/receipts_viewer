@@ -1,39 +1,43 @@
 from datetime import datetime
 from decimal import Decimal
-from pydantic import BaseModel, validator
+import enum
+from pydantic import BaseModel
 
-from app.models.receipt import PaymentType
+
+class PaymentType(str, enum.Enum):
+    """Possible types for product payment"""
+    CASH = "cash"
+    CASHLESS = "cashless"
 
 
 class ProductCreate(BaseModel):
+    """Model for receipt`s product"""
     name: str
     price: Decimal
     quantity: int
 
 
-class ProductResponse(ProductCreate):
+class ProductData(ProductCreate):
+    """Model with product info"""
     total: Decimal
 
 
 class PaymentCreate(BaseModel):
-    type: str
+    """Model with payment info"""
+    payment_type: PaymentType
     amount: Decimal
 
-    @validator("type")
-    def validate_type(cls, v):
-        if v not in ["cash", "cashless"]:
-            raise ValueError("Payment type must be either cash or cashless")
-        return v
 
-
-class ReceiptCreate(BaseModel):
+class ReceiptCreateDTO(BaseModel):
+    """DTO for receipt"""
     products: list[ProductCreate]
     payment: PaymentCreate
 
 
 class ReceiptResponse(BaseModel):
+    """Model for selected receipt info response"""
     id: int
-    products: list[ProductResponse]
+    products: list[ProductData]
     payment_type: PaymentType
     payment_amount: Decimal
     total_amount: Decimal

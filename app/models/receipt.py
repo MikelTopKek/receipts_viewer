@@ -1,18 +1,13 @@
 
 from sqlalchemy import Column, Integer, DECIMAL, ForeignKey, JSON, Enum
 from sqlalchemy.orm import relationship
-from enum import Enum as PyEnum
 
 from app.models.base import BaseModel
-
-
-class PaymentType(str, PyEnum):
-    """Payment type"""
-    CASH = "cash"
-    CASHLESS = "cashless"
+from app.schemas.receipt import PaymentType
 
 
 class Receipt(BaseModel):
+    """Model with info about receipts"""
 
     __tablename__ = "receipts"
 

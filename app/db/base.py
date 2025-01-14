@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from time import time
-from typing import Any, ClassVar, Optional, TypeVar
+from typing import Any, ClassVar, TypeVar
 
 from sqlalchemy import BinaryExpression, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -137,7 +137,7 @@ class Database(metaclass=Singleton):
 
             return obj
 
-    async def get(self, table: Model, *keys: BinaryExpression) -> Optional["Model"]:
+    async def get(self, table: Model, *keys: BinaryExpression) -> Model | None:
         """Get object from db using expressions"""
 
         async with self._async_session_scope(table.__tablename__, "async_get") as session:
@@ -150,16 +150,19 @@ class Database(metaclass=Singleton):
         table: Model,
         *keys: BinaryExpression,
         orders=None,
-        limits: int | None = None,
-    ) -> Optional["Model"]:
+        limit: int | None = None,
+        offset: int | None = None,
+    ) -> Model | None:
         """Get all objects from db using expressions"""
 
         async with self._async_session_scope(table.__tablename__, "async_get_all") as session:
             query = select(table).where(*keys)
             if orders is not None:
                 query = query.order_by(orders)
-            if limits is not None:
-                query = query.limit(limits)
+            if limit is not None:
+                query = query.limit(limit)
+            if offset is not None:
+                query = query.offset(offset)
 
             result = await session.execute(query)
         return result.scalars().all()

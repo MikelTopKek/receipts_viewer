@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.api.v1.dependencies import get_user_interactor, get_user_repo
+from app.api.dependencies import get_user_interactor, get_user_repo
 from app.core.security import create_access_token, get_current_user_id
 from app.interactors.user import UserCreateDTO, UserInteractor, UserUpdateDTO
 from app.repositories.user import UserRepository
@@ -35,12 +35,13 @@ async def login(
             detail="Incorrect email or password",
         )
 
-    access_token = create_access_token(
+    access_token, expiration_time = create_access_token(
         data={"sub": str(user["id"])},
     )
 
     return {
         "access_token": access_token,
+        "expiration_time": expiration_time,
         "token_type": "bearer",
     }
 
@@ -53,7 +54,7 @@ async def get_current_user(
     """Get info about authenticated user. User need to be authorized"""
     user = await repo.get_by_id(current_user_id)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
 
 

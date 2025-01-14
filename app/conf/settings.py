@@ -3,8 +3,6 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from app.db.base import Database
-from app.logger import BaseLogger
 
 BASE_DIR = Path(__file__).parent.parent
 
@@ -55,4 +53,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-db = Database(logger=BaseLogger(), connection_string=settings.sqlalchemy_database_uri)
+

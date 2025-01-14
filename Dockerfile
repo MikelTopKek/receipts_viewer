@@ -1,8 +1,6 @@
 FROM python:3.11-slim
 
-ENV POETRY_VERSION=1.4.2
-
-RUN pip install "poetry==$POETRY_VERSION"
+RUN pip install "poetry==1.7.1"
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
