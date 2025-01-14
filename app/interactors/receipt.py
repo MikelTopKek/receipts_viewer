@@ -2,7 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException, status
 import ujson
 from app.repositories.receipt import ReceiptRepository
-from app.schemas.receipt import ReceiptCreateDTO, ReceiptResponse, ProductData
+from app.schemas.receipt import ReceiptCreateDTO, ReceiptFilter, ReceiptResponse, ProductData
 
 
 class ReceiptInteractor:
@@ -67,3 +67,30 @@ class ReceiptInteractor:
                                rest_amount=receipt.rest_amount,
                                created=receipt.created,
                             )
+
+    async def get_filtered_receipts(
+        self,
+        user_id: int,
+        filters: ReceiptFilter,
+        limit: int,
+        offset: int,
+    ) -> tuple[list[ReceiptResponse], int]:
+        """Return receipts with fiters described in filters variable."""
+        receipts, total = await self.receipt_repo.get_filtered(
+            user_id=user_id,
+            filters=filters,
+            limit=limit,
+            offset=offset,
+        )
+
+        return [
+            ReceiptResponse(
+                id=receipt.id,
+                products=receipt.products,
+                payment_type=receipt.payment_type,
+                payment_amount=receipt.payment_amount,
+                total_amount=receipt.total_amount,
+                rest_amount=receipt.rest_amount,
+                created=receipt.created,
+            ) for receipt in receipts
+        ], total
