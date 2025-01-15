@@ -37,6 +37,7 @@ class ReceiptCreateDTO(BaseModel):
 class ReceiptResponse(BaseModel):
     """Model for selected receipt info response"""
     id: int
+    public_id: str
     products: list[ProductData]
     payment_type: PaymentType
     payment_amount: Decimal
