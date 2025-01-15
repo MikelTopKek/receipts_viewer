@@ -1,5 +1,6 @@
 
-from sqlalchemy import Column, Integer, DECIMAL, ForeignKey, JSON, Enum
+from uuid import uuid4
+from sqlalchemy import Column, Integer, DECIMAL, ForeignKey, JSON, Enum, String
 from sqlalchemy.orm import relationship
 
 from app.models.base import BaseModel
@@ -16,6 +17,9 @@ class Receipt(BaseModel):
     payment_type = Column(Enum(PaymentType), nullable=False, default=PaymentType.CASH.value)
     payment_amount = Column(DECIMAL(10, 2), nullable=False)
     rest_amount = Column(DECIMAL(10, 2), nullable=False)
+
+    # Used as unique identifier for receipts. In real cases some fiscal data can be used instead of uuid64
+    public_id = Column(String(36), unique=True, default=lambda: str(uuid4()))
 
     products = Column(JSON, nullable=False)
 

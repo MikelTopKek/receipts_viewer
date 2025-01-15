@@ -1,8 +1,11 @@
 from decimal import Decimal
+from textwrap import wrap
 from fastapi import HTTPException, status
 import ujson
+from app.models.receipt import Receipt
 from app.repositories.receipt import ReceiptRepository
-from app.schemas.receipt import ReceiptCreateDTO, ReceiptFilter, ReceiptResponse, ProductData
+from app.schemas.receipt import (PaymentType, ProductData, ReceiptCreateDTO, ReceiptFilter,
+    ReceiptResponse)
 
 
 class ReceiptInteractor:
@@ -43,6 +46,7 @@ class ReceiptInteractor:
 
         return ReceiptResponse(
             id=receipt.id,
+            public_id=receipt.public_id,
             products=[ProductData(**p) for p in receipt.products],
             payment_type=data.payment.payment_type,
             payment_amount=data.payment.amount,
@@ -61,6 +65,7 @@ class ReceiptInteractor:
 
         return ReceiptResponse(id=receipt_id,
                                products=receipt.products,
+                               public_id=receipt.public_id,
                                payment_type=receipt.payment_type,
                                payment_amount=receipt.payment_amount,
                                total_amount=receipt.total_amount,
@@ -87,6 +92,7 @@ class ReceiptInteractor:
             ReceiptResponse(
                 id=receipt.id,
                 products=receipt.products,
+                public_id=receipt.public_id,
                 payment_type=receipt.payment_type,
                 payment_amount=receipt.payment_amount,
                 total_amount=receipt.total_amount,
@@ -94,3 +100,59 @@ class ReceiptInteractor:
                 created=receipt.created,
             ) for receipt in receipts
         ], total
+
+    async def get_receipt_text(self, public_id: str, line_width: int) -> str:
+        """Get receipt by public_id and format it as text"""
+        receipt = await self.receipt_repo.get_by_public_id(public_id)
+
+        if not receipt:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Receipt not found",
+            )
+
+        return await self.format_receipt_text(receipt, line_width)
+
+    async def format_receipt_text(self, receipt: Receipt, line_width: int) -> str:
+        """Format receipt data as text with specified line width"""
+        separator = "=" * line_width
+        small_separator = "-" * line_width
+
+        # Receipt`s header
+        text = [
+            "ФОП Джонсонюк Борис".center(line_width),
+            separator,
+        ]
+
+        # Process products
+        for product in receipt.products:
+            # Wrap product name if it`s too long
+            name_lines = wrap(product["name"], line_width - 20)
+
+            # Format price line
+            price_line = f"{product['quantity']:.2f} x {product['price']:.2f}"
+            total = f"{product['total']:.2f}".rjust(line_width - len(price_line))
+            text.append(f"{price_line}{total}")
+
+            # Add wrapped product name
+            for line in name_lines[:-1]:
+                text.extend(line.copy())
+            if name_lines:
+                text.append(name_lines[-1])
+
+            text.append(small_separator)
+
+        payment_title = "Картка" if receipt.payment_type == PaymentType.CASHLESS else "Готівка"
+
+        text.extend([
+            separator,
+            f"{'СУМА':<{line_width-10}}{receipt.total_amount:>10.2f}",
+            f"{payment_title:<{line_width-10}}{receipt.payment_amount:>10.2f}",
+            f"{'Решта':<{line_width-10}}{receipt.rest_amount:>10.2f}",
+            separator,
+            receipt.created.strftime("%d.%m.%Y %H:%M").center(line_width),
+            "Дякуємо за покупку!".center(line_width),
+        ])
+
+        return "\n".join(text)
+

@@ -1,6 +1,7 @@
 from datetime import date
 from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import PlainTextResponse
 from app.api.dependencies import get_receipt_interactor
 from app.core.security import get_current_user_id
 from app.interactors.receipt import ReceiptInteractor
@@ -80,3 +81,15 @@ async def get_receipt(
     """
     return await interactor.get_receipt(receipt_id, current_user_id)
 
+
+@router.get("/public/{public_id}", response_class=PlainTextResponse)
+async def get_receipt_text(
+    public_id: str,
+    line_width: int = Query(default=32, ge=20, le=100),
+    interactor: ReceiptInteractor = Depends(get_receipt_interactor),
+):
+    """
+    Get receipt in text format by public link.
+    Available for unauthorized users.
+    """
+    return await interactor.get_receipt_text(public_id, line_width)
