@@ -1,4 +1,6 @@
 from fastapi import status
+from psycopg2 import IntegrityError
+import sqlalchemy
 
 from app.core.exceptions import AppErrorException
 from app.core.security import get_password_hash, verify_password
@@ -76,7 +78,11 @@ class UserInteractor:
         Returns:
             dict: updated user`s data
         """
-        user = await self.user_repo.update(user_id, user_data.model_dump(exclude_unset=True))
+        try:
+            user = await self.user_repo.update(user_id, user_data.model_dump(exclude_unset=True))
+        except sqlalchemy.exc.IntegrityError:
+            raise ValueError("Email already used")
+            
         if not user:
             raise ValueError("User not found")
         return {
