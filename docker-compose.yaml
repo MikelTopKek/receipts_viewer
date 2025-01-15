@@ -1,0 +1,30 @@
+services:
+  db:
+    container_name: db
+    image: postgres:latest
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  backend:
+    depends_on:
+      - db
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["sh", "docker-entrypoint.sh"]
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - .:/app:delegated
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
