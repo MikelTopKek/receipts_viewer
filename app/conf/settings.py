@@ -3,7 +3,6 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 BASE_DIR = Path(__file__).parent.parent
 
 
@@ -31,12 +30,6 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str = "postgres"
     POSTGRES_PORT: int = 5432
 
-    POSTGRES_TEST_USER: str = "postgres"
-    POSTGRES_TEST_PASSWORD: str = "postgres"
-    POSTGRES_TEST_DB: str = "postgres_db"
-    POSTGRES_TEST_HOST: str = "postgres"
-    POSTGRES_TEST_PORT: int = 5431
-
     DB_DRIVER: str = "postgresql+asyncpg"
     DB_DRIVER_SYNC: str = "postgresql+psycopg2"
 
@@ -46,11 +39,7 @@ class Settings(BaseSettings):
     @property
     def sqlalchemy_database_uri(self) -> str:
         """Database URI for the database connect"""
-        if self.ENV == Env.TEST:
-            return f"{self.DB_DRIVER}://{self.POSTGRES_TEST_USER}:{self.POSTGRES_TEST_PASSWORD}@{self.POSTGRES_TEST_HOST}:{self.POSTGRES_TEST_PORT}/{self.POSTGRES_TEST_DB}"
-
         return f"{self.DB_DRIVER}://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
 
 settings = Settings()
-

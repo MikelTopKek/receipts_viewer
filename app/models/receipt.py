@@ -1,6 +1,7 @@
 
 from uuid import uuid4
-from sqlalchemy import Column, Integer, DECIMAL, ForeignKey, JSON, Enum, String
+
+from sqlalchemy import DECIMAL, JSON, Column, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.models.base import BaseModel

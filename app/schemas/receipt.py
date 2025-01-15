@@ -1,7 +1,8 @@
-from datetime import datetime, date
-from decimal import Decimal
 import enum
-from pydantic import BaseModel
+from datetime import date, datetime
+from decimal import Decimal
+
+from pydantic import BaseModel, model_validator
 
 
 class PaymentType(str, enum.Enum):
@@ -11,10 +12,18 @@ class PaymentType(str, enum.Enum):
 
 
 class ProductCreate(BaseModel):
-    """Model for receipt`s product"""
+    """Model for receipt's product"""
     name: str
     price: Decimal
     quantity: int
+
+    @model_validator(mode='after')
+    def validate(self) -> 'ProductCreate':
+        if self.price <= 0:
+            raise ValueError("Price must be greater than 0")
+        if self.quantity <= 0:
+            raise ValueError("Quantity must be greater than 0")
+        return self
 
 
 class ProductData(ProductCreate):
@@ -26,6 +35,12 @@ class PaymentCreate(BaseModel):
     """Model with payment info"""
     payment_type: PaymentType
     amount: Decimal
+
+    @model_validator(mode='after')
+    def validate(self) -> 'PaymentCreate':
+        if self.amount <= 0:
+            raise ValueError("Amount must be greater than 0")
+        return self
 
 
 class ReceiptCreateDTO(BaseModel):

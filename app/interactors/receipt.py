@@ -1,11 +1,13 @@
 from decimal import Decimal
 from textwrap import wrap
-from fastapi import HTTPException, status
+
 import ujson
+from fastapi import HTTPException, status
+
 from app.models.receipt import Receipt
 from app.repositories.receipt import ReceiptRepository
-from app.schemas.receipt import (PaymentType, ProductData, ReceiptCreateDTO, ReceiptFilter,
-    ReceiptResponse)
+from app.schemas.receipt import (PaymentType, ProductData, ReceiptCreateDTO,
+                                 ReceiptFilter, ReceiptResponse)
 
 
 class ReceiptInteractor:

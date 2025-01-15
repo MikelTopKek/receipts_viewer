@@ -1,12 +1,14 @@
 from datetime import date
 from decimal import Decimal
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import PlainTextResponse
+
 from app.api.dependencies import get_receipt_interactor
 from app.core.security import get_current_user_id
 from app.interactors.receipt import ReceiptInteractor
-from app.schemas.receipt import PaymentType, ReceiptCreateDTO, ReceiptFilter, ReceiptResponse
-
+from app.schemas.receipt import (PaymentType, ReceiptCreateDTO, ReceiptFilter,
+                                 ReceiptResponse)
 
 router = APIRouter(tags=["receipts"])
 
@@ -24,7 +26,7 @@ async def create_receipt(
     try:
         return await interactor.create_receipt(current_user_id, receipt_data)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e!r}")
 
 
 @router.get("/", response_model=dict)

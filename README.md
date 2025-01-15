@@ -27,6 +27,13 @@ poetry install --all-extras
 cat .env
 ```
 
+### 5. Apply migrations
+```
+alembic upgrade head
+```
+> Don`t forget to change POSTGRES_HOST to "127.0.0.1" to run migrations from shell manually
+> Before running containers change it to db container name (db)
+
 
 ## Run all containers:
 With pre-installed make:
@@ -38,6 +45,11 @@ Without pre-installed make:
 docker-compose -f docker-compose.yaml up
 ```
 
+## Run tests
+```
+poetry shell
+pytest tests/
+```
 
 ## Swagger:
 http://localhost:8080/docs
