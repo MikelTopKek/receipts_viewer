@@ -60,7 +60,7 @@ class ReceiptRepository:
         # Get total count
         count_query = select(func.count()).select_from(query.subquery())
         total = (await self.db.execute_query(Receipt, count_query))
-        print(total)
+
         # Apply pagination
         query = query.limit(limit).offset(offset)
 
