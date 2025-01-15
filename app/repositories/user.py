@@ -1,4 +1,3 @@
-from sqlalchemy import select
 
 from app.db.base import Database
 from app.models.user import User
@@ -21,10 +20,7 @@ class UserRepository(BaseRepository):
 
     async def get_by_email(self, email: str) -> User | None:
         """Get user by email"""
-        async with self.db._async_session_scope("user", "get_by_email") as session:
-            query = select(User).where(User.email == email)
-            result = await session.execute(query)
-            return result.scalar_one_or_none()
+        return await self.db.get(User, User.email == email)
 
     async def get_by_id(self, user_id: int) -> User | None:
         """Get user by user_id"""
@@ -32,13 +28,9 @@ class UserRepository(BaseRepository):
 
     async def update_password(self, user_id: int, new_password: str) -> User | None:
         """Update user`s password"""
-        async with self.db._async_session_scope("user", "update_password") as session:
-            user = await self.get_by_id(user_id)
-            if user:
-                user.password = new_password
-                await session.flush()
-                await session.refresh(user)
-            return user
+        return await self.db.update(table=User,
+                                    obj_id=user_id,
+                                    values={"password": new_password})
 
     async def update(self, user_id: int, data: dict) -> User | None:
         """Update user`s data"""

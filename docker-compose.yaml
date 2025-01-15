@@ -13,8 +13,6 @@ services:
   backend:
     depends_on:
       - db
-    links:
-      - db
     container_name: backend
     build:
       context: .
