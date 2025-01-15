@@ -31,7 +31,8 @@ cat .env
 ```
 alembic upgrade head
 ```
-> Don`t forget to change POSTGRES_HOST to "127.0.0.1" to run migrations from shell
+> Don`t forget to change POSTGRES_HOST to "127.0.0.1" to run migrations from shell manually
+> Before running containers change it to db container name (db)
 
 
 ## Run all containers:
