@@ -6,7 +6,6 @@ from app.core.security import create_access_token, get_current_user_id
 from app.interactors.user import UserCreateDTO, UserInteractor, UserUpdateDTO
 from app.repositories.user import UserRepository
 
-
 router = APIRouter(tags=["users"])
 
 

@@ -1,7 +1,7 @@
 from sqlalchemy import func, select
 
-from app.models.receipt import Receipt
 from app.db.base import Database
+from app.models.receipt import Receipt
 from app.schemas.receipt import ReceiptFilter, ReceiptResponse
 
 

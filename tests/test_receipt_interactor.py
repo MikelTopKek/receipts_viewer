@@ -1,14 +1,15 @@
-from fastapi.testclient import TestClient
-import pytest
 from datetime import datetime
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
 from fastapi import HTTPException, status
+from fastapi.testclient import TestClient
 
-from app.models.receipt import Receipt
-from app.schemas.receipt import PaymentCreate, PaymentType, ReceiptCreateDTO, ReceiptFilter
 from app.interactors.receipt import ReceiptInteractor
+from app.models.receipt import Receipt
+from app.schemas.receipt import (PaymentCreate, PaymentType, ReceiptCreateDTO,
+                                 ReceiptFilter)
 
 
 @pytest.mark.asyncio

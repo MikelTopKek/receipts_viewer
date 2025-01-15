@@ -3,8 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import auth
-from app.api import receipts
+from app.api import auth, receipts
 from app.conf.settings import settings
 from app.core.exceptions import (AppErrorException, app_error_handler,
                                  http_error_handler, validation_error_handler,

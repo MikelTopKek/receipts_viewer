@@ -9,7 +9,6 @@ from sqlalchemy.orm import sessionmaker
 from app.logger import BaseLogger
 from app.models.base import Base
 
-
 Model = TypeVar("Model", bound=Base) # type: ignore
 
 

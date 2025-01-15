@@ -1,12 +1,14 @@
 from datetime import date
 from decimal import Decimal
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import PlainTextResponse
+
 from app.api.dependencies import get_receipt_interactor
 from app.core.security import get_current_user_id
 from app.interactors.receipt import ReceiptInteractor
-from app.schemas.receipt import PaymentType, ReceiptCreateDTO, ReceiptFilter, ReceiptResponse
-
+from app.schemas.receipt import (PaymentType, ReceiptCreateDTO, ReceiptFilter,
+                                 ReceiptResponse)
 
 router = APIRouter(tags=["receipts"])
 

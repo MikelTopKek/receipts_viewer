@@ -1,10 +1,11 @@
-import pytest
 from unittest.mock import AsyncMock, patch
+
+import pytest
 from fastapi import status
 
 from app.core.exceptions import AppErrorException
-from app.schemas.user import UserCreateDTO, UserUpdateDTO
 from app.interactors.user import UserInteractor
+from app.schemas.user import UserCreateDTO, UserUpdateDTO
 
 
 @pytest.mark.asyncio

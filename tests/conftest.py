@@ -1,16 +1,18 @@
 
 from decimal import Decimal
+from unittest.mock import AsyncMock
+
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock
 
-from app.interactors.receipt import ReceiptInteractor
-from app.repositories.user import UserRepository
-from app.interactors.user import UserInteractor
-from app.api.dependencies import get_receipt_interactor, get_user_interactor, get_user_repo
-from app.schemas.receipt import PaymentCreate, PaymentType, ProductCreate
+from app.api.dependencies import (get_receipt_interactor, get_user_interactor,
+                                  get_user_repo)
 from app.api.receipts import router as receipt_router
+from app.interactors.receipt import ReceiptInteractor
+from app.interactors.user import UserInteractor
+from app.repositories.user import UserRepository
+from app.schemas.receipt import PaymentCreate, PaymentType, ProductCreate
 
 
 class MockDB:

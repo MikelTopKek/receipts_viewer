@@ -1,6 +1,6 @@
+import sqlalchemy
 from fastapi import status
 from psycopg2 import IntegrityError
-import sqlalchemy
 
 from app.core.exceptions import AppErrorException
 from app.core.security import get_password_hash, verify_password
